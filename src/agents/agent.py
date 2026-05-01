@@ -61,7 +61,14 @@ def build_agent(ctx=None):
         get_provinces as get_provinces_data, get_cities_by_province,
         validate_sa_phone, validate_sa_postal_code, validate_sa_address,
         check_network_status, get_offline_cache_policy,
-        estimate_delivery_time, calculate_shipping_fee
+        estimate_delivery_time as sa_estimate_delivery, calculate_shipping_fee
+    )
+    from tools.logistics_customs import (
+        track_shipment, verify_tracking_number,
+        find_pickup_points, get_pickup_point_detail,
+        calculate_shipping_cost,
+        get_customs_clearance_info, calculate_customs_duty,
+        get_prohibited_items, estimate_total_delivery_time
     )
 
     return create_agent(
@@ -81,7 +88,13 @@ def build_agent(ctx=None):
             get_supported_languages, translate, format_currency_zar,
             validate_sa_phone, validate_sa_postal_code, validate_sa_address,
             check_network_status, get_offline_cache_policy,
-            estimate_delivery_time, calculate_shipping_fee
+            sa_estimate_delivery, calculate_shipping_fee,
+            # 物流与清关工具
+            track_shipment, verify_tracking_number,
+            find_pickup_points, get_pickup_point_detail,
+            calculate_shipping_cost,
+            get_customs_clearance_info, calculate_customs_duty,
+            get_prohibited_items, estimate_total_delivery_time
         ],
         checkpointer=get_memory_saver(),
         state_schema=AgentState,
