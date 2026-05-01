@@ -70,6 +70,14 @@ def build_agent(ctx=None):
         get_customs_clearance_info, calculate_customs_duty,
         get_prohibited_items, estimate_total_delivery_time
     )
+    from tools.merchant_tools import (
+        register_merchant, get_merchant_profile, update_merchant_info, get_merchant_status,
+        list_product, update_product, get_merchant_products, update_stock, get_product_categories,
+        get_merchant_orders, get_order_detail, process_order, batch_process_orders,
+        get_after_sales_list, process_after_sales, get_after_sales_detail, get_after_sales_stats,
+        get_settlement_summary, get_transaction_details, request_withdrawal, get_withdrawal_history,
+        get_merchant_balance, create_merchant_order, create_after_sales_ticket
+    )
 
     return create_agent(
         model=llm,
@@ -94,7 +102,14 @@ def build_agent(ctx=None):
             find_pickup_points, get_pickup_point_detail,
             calculate_shipping_cost,
             get_customs_clearance_info, calculate_customs_duty,
-            get_prohibited_items, estimate_total_delivery_time
+            get_prohibited_items, estimate_total_delivery_time,
+            # 商家端工具
+            register_merchant, get_merchant_profile, update_merchant_info, get_merchant_status,
+            list_product, update_product, get_merchant_products, update_stock, get_product_categories,
+            get_merchant_orders, get_order_detail, process_order, batch_process_orders,
+            get_after_sales_list, process_after_sales, get_after_sales_detail, get_after_sales_stats,
+            get_settlement_summary, get_transaction_details, request_withdrawal, get_withdrawal_history,
+            get_merchant_balance
         ],
         checkpointer=get_memory_saver(),
         state_schema=AgentState,
