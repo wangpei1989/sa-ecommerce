@@ -55,6 +55,14 @@ def build_agent(ctx=None):
         get_payment_methods, initiate_payment, get_payment_status,
         apply_refund, get_refund_list, confirm_delivery
     )
+    from tools.sa_localization import (
+        convert_to_zar, convert_from_zar, get_exchange_rates,
+        get_supported_languages, translate, format_currency_zar,
+        get_provinces as get_provinces_data, get_cities_by_province,
+        validate_sa_phone, validate_sa_postal_code, validate_sa_address,
+        check_network_status, get_offline_cache_policy,
+        estimate_delivery_time, calculate_shipping_fee
+    )
 
     return create_agent(
         model=llm,
@@ -63,10 +71,17 @@ def build_agent(ctx=None):
             send_sms_code, register_user, login_user, get_user_profile,
             search_products, get_product_detail, get_categories,
             add_to_cart, get_cart, remove_from_cart,
-            get_provinces, add_shipping_address, get_shipping_addresses,
+            get_provinces_data, get_cities_by_province,
+            add_shipping_address, get_shipping_addresses,
             create_order, get_order_list, get_order_detail, cancel_order,
             get_payment_methods, initiate_payment, get_payment_status,
-            apply_refund, get_refund_list, confirm_delivery
+            apply_refund, get_refund_list, confirm_delivery,
+            # 本地化工具
+            convert_to_zar, convert_from_zar, get_exchange_rates,
+            get_supported_languages, translate, format_currency_zar,
+            validate_sa_phone, validate_sa_postal_code, validate_sa_address,
+            check_network_status, get_offline_cache_policy,
+            estimate_delivery_time, calculate_shipping_fee
         ],
         checkpointer=get_memory_saver(),
         state_schema=AgentState,
