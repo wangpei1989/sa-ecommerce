@@ -1,0 +1,36 @@
+{
+  "name": "South Africa E-commerce Agent",
+  "version": "1.0.0",
+  "description": "南非跨境电商智能助手 - 基于 Coze 平台",
+  "app_type": "agent",
+  "runtime": "python310",
+  "entrypoint": "src/agents/agent.py",
+  "build_command": "uv sync",
+  "start_command": "python src/main.py",
+  "environment": {
+    "COZE_WORKSPACE_PATH": "/workspace/projects",
+    "PYTHONPATH": "/workspace/projects/src"
+  },
+  "dependencies": {
+    "langgraph": ">=1.0.0",
+    "langchain": ">=1.0.0",
+    "langchain-openai": ">=0.3.0",
+    "coze-coding-dev-sdk": ">=1.0.0"
+  },
+  "features": {
+    "streaming": true,
+    "short_term_memory": true,
+    "tools": [
+      "product",
+      "order",
+      "shipping",
+      "payment",
+      "user",
+      "promotion",
+      "localization"
+    ]
+  },
+  "supported_languages": ["en", "zu", "af", "xh", "st", "tn"],
+  "supported_currency": "ZAR",
+  "target_market": "South Africa"
+}
