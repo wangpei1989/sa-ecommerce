@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- App Name -->
+    <string name="app_name">SA Commerce</string>
+    
+    <!-- Navigation -->
+    <string name="nav_home">Ikhaya</string>
+    <string name="nav_categories">Izigaba</string>
+    <string name="nav_cart">Indlela yokuthwala</string>
+    <string name="nav_orders">Oder</string>
+    <string name="nav_profile">Iphrofayela</string>
+    
+    <!-- Common -->
+    <string name="loading">Iyalodinga…</string>
+    <string name="retry">Zama futhi</string>
+    <string name="cancel">Khansela</string>
+    <string name="confirm">Qinisekisa</string>
+    <string name="save">Londoloza</string>
+    <string name="search">Sesha</string>
+    <string name="filter">Hlunga</string>
+    
+    <!-- Authentication -->
+    <string name="login">Ngena ngemvume</string>
+    <string name="register">Bhalisa</string>
+    <string name="logout">Phuma</string>
+    <string name="phone_number">Inombolo yocingo</string>
+    <string name="email">I-imeyili</string>
+    <string name="password">Ipinindi</string>
+    
+    <!-- Products -->
+    <string name="products">Imikhiqizo</string>
+    <string name="featured_products">Imikhiqizo ebhengeziwe</string>
+    <string name="add_to_cart">Faka endleleni</string>
+    <string name="buy_now">Senga manje</string>
+    <string name="out_of_stock">Ayikho esitokisini</string>
+    
+    <!-- Cart -->
+    <string name="shopping_cart">Indlela yokuthwala</string>
+    <string name="cart_empty">Indlela yakho ayikho lutho</string>
+    <string name="proceed_to_checkout">Qhubeka nokuhlambela</string>
+    
+    <!-- Orders -->
+    <string name="my_orders">Oder zami</string>
+    <string name="order_details">Imininingwane ye-oda</string>
+    <string name="track_order">Landela i-oda</string>
+    
+    <!-- Payment -->
+    <string name="payment">Ukuhlinzeka</string>
+    <string name="pay_now">Khokha manje</string>
+    
+    <!-- Errors -->
+    <string name="error_generic">Kukhona okuhlulekile. Sicela uzame futhi.</string>
+    <string name="error_network">Iphutha lenethiwekhi. Sicela uqaphele ukuxhumana kwakho.</string>
+    
+    <!-- Success Messages -->
+    <string name="added_to_cart">Ifakiwe endleleni</string>
+    <string name="order_placed">I-oda ibekwe ngempumelelo</string>
+</resources>

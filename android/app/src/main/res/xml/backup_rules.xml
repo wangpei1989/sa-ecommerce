@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<full-backup-content>
+    <!-- 南非区安全策略：禁止备份敏感数据 -->
+    
+    <!-- 排除敏感SharedPreferences -->
+    <exclude domain="sharedpref" path="." />
+    
+    <!-- 排除数据库 -->
+    <exclude domain="database" path="." />
+    
+    <!-- 排除文件 -->
+    <exclude domain="file" path="." />
+    
+    <!-- 排除外部存储 -->
+    <exclude domain="external" path="." />
+    
+    <!-- 排除root -->
+    <exclude domain="root" path="." />
+    
+    <!-- 排除缓存 -->
+    <exclude domain="cache" path="." />
+</full-backup-content>

@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- App Name -->
+    <string name="app_name">SA Koop</string>
+    
+    <!-- Navigation -->
+    <string name="nav_home">Tuis</string>
+    <string name="nav_categories">Kategorieë</string>
+    <string name="nav_cart">Mandjie</string>
+    <string name="nav_orders">Bestellings</string>
+    <string name="nav_profile">Profiel</string>
+    
+    <!-- Common -->
+    <string name="loading">Laai…</string>
+    <string name="retry">Herprobeer</string>
+    <string name="cancel">Kanselleer</string>
+    <string name="confirm">Bevestig</string>
+    <string name="save">Stoor</string>
+    <string name="search">Soek</string>
+    <string name="filter">Filter</string>
+    
+    <!-- Authentication -->
+    <string name="login">Meld Aan</string>
+    <string name="register">Registreer</string>
+    <string name="logout">Teken Uit</string>
+    <string name="phone_number">Foon Nommer</string>
+    <string name="email">E-pos</string>
+    <string name="password">Wagwoord</string>
+    <string name="forgot_password">Wagwoord Vergeet?</string>
+    <string name="verify_otp">Verifieer OTP</string>
+    
+    <!-- Products -->
+    <string name="products">Produkte</string>
+    <string name="featured_products">Vooraanstaande Produkte</string>
+    <string name="new_arrivals">Nuwe Aankomste</string>
+    <string name="best_sellers">Beste Verkopers</string>
+    <string name="product_details">Produk Besonderhede</string>
+    <string name="add_to_cart">Voeg by Mandjie</string>
+    <string name="buy_now">Koop Nou</string>
+    <string name="out_of_stock">Uit Voorraad</string>
+    <string name="in_stock">In Voorraad</string>
+    
+    <!-- Cart -->
+    <string name="shopping_cart">Winkelsmandjie</string>
+    <string name="cart_empty">Jou mandjie is leeg</string>
+    <string name="proceed_to_checkout">Gaan voort na Kassier</string>
+    
+    <!-- Orders -->
+    <string name="my_orders">My Bestellings</string>
+    <string name="order_details">Bestelling Besonderhede</string>
+    <string name="track_order">Volg Bestelling</string>
+    <string name="cancel_order">Kanselleer Bestelling</string>
+    
+    <!-- Payment -->
+    <string name="payment">Betaling</string>
+    <string name="payment_method">Betaling Metode</string>
+    <string name="pay_now">Betaal Nou</string>
+    <string name="payment_success">Betaling Suksesvol</string>
+    <string name="payment_failed">Betaling Misluk</string>
+    
+    <!-- Shipping -->
+    <string name="shipping_address">Afleweringsadres</string>
+    <string name="province">Provinsie</string>
+    <string name="city">Stad</string>
+    <string name="postal_code">Poskode</string>
+    
+    <!-- Errors -->
+    <string name="error_generic">Iets het verkeerd gegaan. Probeer asseblief weer.</string>
+    <string name="error_network">Netwerk fout. Kontroleer asseblief jou verbinding.</string>
+    <string name="error_invalid_phone">Ongeldige foonnommer formaat</string>
+    <string name="error_invalid_email">Ongeldige e-pos adres</string>
+    
+    <!-- Empty States -->
+    <string name="no_products">Geen produkte gevind nie</string>
+    <string name="no_orders">Nog geen bestellings nie</string>
+    
+    <!-- Success Messages -->
+    <string name="added_to_cart">By mandjie gevoeg</string>
+    <string name="order_placed">Bestelling suksesvol geplaas</string>
+</resources>
