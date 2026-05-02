@@ -1,95 +1,61 @@
-# 🇿🇦 South Africa E-commerce Agent
+# South Africa Cross-Border E-commerce Platform
 
-南非跨境电商智能助手，基于 Coze 平台构建。
+南非跨境电商平台 - Coze Agent 应用
 
-## 功能模块
+## 最新提交 (v1.0.5)
+- ✅ 修复部署构建错误（tool.uv.dev-dependencies弃用警告）
+- ✅ 增加UV网络超时配置（300秒）
+- ✅ 重新生成uv.lock依赖锁定文件
 
-### 1. 商品管理
-- 商品搜索
-- 商品详情查询
-- 商品分类浏览
+## 项目状态
 
-### 2. 订单管理
-- 创建订单
-- 查询订单状态
-- 取消订单
-- 查看订单列表
+| 模块 | 状态 |
+|------|------|
+| 用户端 | ✅ 完成 |
+| 商家端 | ✅ 完成 |
+| 物流清关 | ✅ 完成 |
+| 营销系统 | ✅ 完成 |
+| 本地化 | ✅ 完成 |
+| Android打包 | ✅ 完成 |
 
-### 3. 物流配送
-- 物流追踪
-- 自提点查询
-- 运费计算
+## 部署说明
 
-### 4. 南非本地化
-- 南非兰特 (ZAR) 货币支持
-- 多语言支持 (英语、祖鲁语、阿非利堪斯语等)
-- 南非手机号验证
-- 南非邮编验证
-- 南非省份数据
+### 部署前检查清单
+- [x] pyproject.toml - 无 `tool.uv` 配置
+- [x] dependency-groups.dev - 已正确配置
+- [x] uv.lock - 已生成（130 packages）
+- [x] scripts/setup.sh - UV_HTTP_TIMEOUT=300
 
-### 5. 支付方式
-- 信用卡/借记卡
-- Instant EFT
-- Ozow 即时支付
-- PayPal
+### 部署步骤
+1. 确保代码已提交到 git
+2. 在 Coze 平台点击「重新部署」按钮
+3. 等待构建完成（约3-5分钟）
+4. 验证部署成功
 
-### 6. 用户中心
-- 用户信息管理
-- 收货地址管理
+### 常见问题
 
-### 7. 营销功能
-- 促销活动
-- 优惠券领取与使用
-- 积分系统
+**Q: 部署仍然失败，显示相同的错误？**
+A: 这是旧的部署日志。请确保点击「重新部署」按钮，生成新的 deployment_history_id。
 
-## 项目结构
+**Q: 如何确认使用了最新配置？**
+A: 查看新的部署日志，应显示：
+- `Resolved 130 packages` (不是110)
+- 无 `tool.uv.dev-dependencies` 警告
+- `UV_HTTP_TIMEOUT` 值为 300
+
+## 文件结构
 
 ```
-src/
-├── agents/
-│   └── agent.py          # Agent 核心入口
-├── tools/
-│   ├── product_tool.py    # 商品工具
-│   ├── order_tool.py      # 订单工具
-│   ├── shipping_tool.py   # 物流工具
-│   ├── payment_tool.py    # 支付工具
-│   ├── user_tool.py      # 用户工具
-│   ├── promotion_tool.py  # 营销工具
-│   └── zar_currency.py   # 本地化工具
-└── storage/
-    └── memory/
-        └── memory_saver.py # 记忆管理
+/workspace/projects/
+├── src/
+│   ├── agents/agent.py           # Agent核心配置
+│   └── tools/                    # 业务工具集
+├── config/
+│   └── agent_llm_config.json     # 模型配置
+├── android/                      # Android打包配置
+├── scripts/
+│   └── setup.sh                  # 部署脚本（含超时配置）
+├── pyproject.toml                # 项目配置
+├── uv.lock                       # 依赖锁定
+└── .coze                         # Coze配置
 ```
-
-## 快速开始
-
-### 1. 安装依赖
-```bash
-uv sync
-```
-
-### 2. 配置模型
-编辑 `config/agent_llm_config.json`，配置您的模型参数。
-
-### 3. 启动服务
-```bash
-python src/main.py
-```
-
-### 4. 运行测试
-```bash
-pytest tests/
-```
-
-## 南非电商政策说明
-
-- **运费规则**: 订单金额超过 R500 享受免费配送
-- **退货政策**: 收货后 30 天内可申请退货
-- **支付方式**: 不支持货到付款 (跨境限制)
-- **配送范围**: 仅支持南非境内配送
-
-## 货币说明
-
-- 所有金额以 **分 (cent)** 为单位存储
-- 前端显示需除以 100 转为兰特
-- 示例: `29900` 分 = `R299.00`
