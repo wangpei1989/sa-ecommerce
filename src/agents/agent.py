@@ -78,6 +78,14 @@ def build_agent(ctx=None):
         get_settlement_summary, get_transaction_details, request_withdrawal, get_withdrawal_history,
         get_merchant_balance, create_merchant_order, create_after_sales_ticket
     )
+    from tools.marketing_tools import (
+        get_active_promotions, get_promotion_detail, calculate_promotion_discount, create_promotion,
+        get_available_coupons, validate_coupon, redeem_coupon, create_coupon,
+        get_user_points, earn_points, redeem_points, get_points_history, get_points_exchange_rates, get_tier_benefits
+    )
+    from tools.test_suite import (
+        run_e2e_test_suite, run_quick_checkout_test, get_test_report
+    )
 
     return create_agent(
         model=llm,
@@ -109,7 +117,13 @@ def build_agent(ctx=None):
             get_merchant_orders, get_order_detail, process_order, batch_process_orders,
             get_after_sales_list, process_after_sales, get_after_sales_detail, get_after_sales_stats,
             get_settlement_summary, get_transaction_details, request_withdrawal, get_withdrawal_history,
-            get_merchant_balance
+            get_merchant_balance,
+            # 营销工具
+            get_active_promotions, get_promotion_detail, calculate_promotion_discount, create_promotion,
+            get_available_coupons, validate_coupon, redeem_coupon, create_coupon,
+            get_user_points, earn_points, redeem_points, get_points_history, get_points_exchange_rates, get_tier_benefits,
+            # 测试工具
+            run_e2e_test_suite, run_quick_checkout_test, get_test_report
         ],
         checkpointer=get_memory_saver(),
         state_schema=AgentState,
