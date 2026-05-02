@@ -1,0 +1,10 @@
+# UV 配置
+# 增加网络超时时间以应对慢速网络环境
+http-timeout = 300
+connect-timeout = 60
+
+# 禁用 hash 检查以加快安装速度
+# no-hashes = true
+
+# 缓存设置
+cache-dir = "/tmp/.uv-cache"
