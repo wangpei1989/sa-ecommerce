@@ -4,126 +4,122 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
-import android.widget.ScrollView
+import android.widget.ImageButton
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import kotlinx.coroutines.*
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.google.gson.Gson
 import okhttp3.*
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.RequestBody.Companion.toRequestBody
-import org.json.JSONArray
-import org.json.JSONObject
 import java.io.IOException
-import java.util.concurrent.TimeUnit
 
 class MainActivity : AppCompatActivity() {
-    
+
+    private lateinit var messagesRecyclerView: RecyclerView
+    private lateinit var messageAdapter: MessageAdapter
     private lateinit var messageInput: EditText
-    private lateinit var sendButton: Button
-    private lateinit var chatView: TextView
-    private lateinit var scrollView: ScrollView
-    
-    private val client = OkHttpClient.Builder()
-        .connectTimeout(60, TimeUnit.SECONDS)
-        .readTimeout(120, TimeUnit.SECONDS)
-        .writeTimeout(60, TimeUnit.SECONDS)
-        .build()
-    
-    private val scope = CoroutineScope(Dispatchers.Main + SupervisorJob())
-    
-    // Replace with your deployed API endpoint
+    private lateinit var sendButton: ImageButton
+
+    // TODO: Replace with your deployed Agent API URL and Token
     private var apiBaseUrl = "https://your-agent-api.coze.cn"
     private var apiToken = "your_api_token_here"
-    
+
+    private val client = OkHttpClient()
+    private val gson = Gson()
+
+    private val messages = mutableListOf<Message>()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        
+
         initViews()
-        loadConfig()
-        appendMessage("🤖 SA Commerce Bot", "Welcome to South Africa E-Commerce!\n\nHow can I help you today?")
+        setupRecyclerView()
+        setupListeners()
+
+        // Add welcome message
+        addMessage("assistant", "👋 Welcome to SA Commerce!\n\nI'm your shopping assistant. How can I help you today?\n\nTry:\n• Search for products\n• Check your cart\n• Track orders\n• Currency conversion")
     }
-    
+
     private fun initViews() {
+        messagesRecyclerView = findViewById(R.id.messagesRecyclerView)
         messageInput = findViewById(R.id.messageInput)
         sendButton = findViewById(R.id.sendButton)
-        chatView = findViewById(R.id.chatView)
-        scrollView = findViewById(R.id.scrollView)
-        
-        sendButton.setOnClickListener { sendMessage() }
-        messageInput.setOnEditorActionListener { _, _, _ ->
-            sendMessage()
-            true
-        }
     }
-    
-    private fun loadConfig() {
-        // Load API configuration from SAConfig
-        val config = SAConfig(this)
-        apiBaseUrl = config.getApiBaseUrl()
-        apiToken = config.getApiToken()
+
+    private fun setupRecyclerView() {
+        messageAdapter = MessageAdapter(messages)
+        messagesRecyclerView.layoutManager = LinearLayoutManager(this)
+        messagesRecyclerView.adapter = messageAdapter
     }
-    
-    private fun sendMessage() {
-        val message = messageInput.text.toString().trim()
-        if (message.isEmpty()) return
-        
-        appendMessage("You", message)
-        messageInput.text.clear()
-        
-        scope.launch {
-            try {
-                val response = withContext(Dispatchers.IO) {
-                    callApi(message)
-                }
-                appendMessage("🤖 SA Commerce Bot", response)
-            } catch (e: Exception) {
-                appendMessage("🤖 SA Commerce Bot", "Sorry, an error occurred: ${e.message}")
+
+    private fun setupListeners() {
+        sendButton.setOnClickListener {
+            val message = messageInput.text.toString().trim()
+            if (message.isNotEmpty()) {
+                sendMessage(message)
             }
         }
     }
-    
-    private fun callApi(message: String): String {
-        val json = JSONObject().apply {
-            put("query", message)
-            put("stream", false)
-            put("conversation_id", "mobile_user")
-        }
-        
-        val body = json.toString().toRequestBody("application/json".toMediaType())
-        
+
+    private fun sendMessage(message: String) {
+        // Add user message
+        addMessage("user", message)
+        messageInput.text.clear()
+
+        // Send to Agent API
+        sendToAgent(message)
+    }
+
+    private fun sendToAgent(message: String) {
+        val json = """
+            {
+                "message": "$message"
+            }
+        """.trimIndent()
+
+        val requestBody = json.toRequestBody("application/json".toMediaType())
+
         val request = Request.Builder()
-            .url("$apiBaseUrl/chat")
+            .url(apiBaseUrl)
             .addHeader("Authorization", "Bearer $apiToken")
             .addHeader("Content-Type", "application/json")
-            .post(body)
+            .post(requestBody)
             .build()
-        
-        return client.newCall(request).execute().use { response ->
-            if (!response.isSuccessful) {
-                throw IOException("API Error: ${response.code}")
+
+        // Show loading
+        addMessage("assistant", "💭 Thinking...")
+
+        client.newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                runOnUiThread {
+                    // Remove loading message
+                    messages.removeAt(messages.size - 1)
+                    addMessage("assistant", "❌ Error: ${e.message}\n\nPlease check your API configuration.")
+                }
             }
-            response.body?.string() ?: "No response"
-        }
-    }
-    
-    private fun appendMessage(sender: String, message: String) {
-        runOnUiThread {
-            val currentText = chatView.text.toString()
-            val newText = if (currentText.isEmpty()) {
-                "【$sender】\n$message\n\n"
-            } else {
-                "$currentText【$sender】\n$message\n\n"
+
+            override fun onResponse(call: Call, response: Response) {
+                runOnUiThread {
+                    // Remove loading message
+                    if (messages.size > 0 && messages[messages.size - 1].content == "💭 Thinking...") {
+                        messages.removeAt(messages.size - 1)
+                    }
+                    
+                    val responseBody = response.body?.string() ?: "No response"
+                    addMessage("assistant", responseBody)
+                }
             }
-            chatView.text = newText
-            scrollView.post { scrollView.fullScroll(View.FOCUS_DOWN) }
-        }
+        })
     }
-    
-    override fun onDestroy() {
-        super.onDestroy()
-        scope.cancel()
-        client.dispatcher.executorService.shutdown()
+
+    private fun addMessage(role: String, content: String) {
+        messages.add(Message(role, content))
+        messageAdapter.notifyItemInserted(messages.size - 1)
+        messagesRecyclerView.scrollToPosition(messages.size - 1)
     }
 }
+
+data class Message(val role: String, val content: String)
