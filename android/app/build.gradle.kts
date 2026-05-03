@@ -1,198 +1,149 @@
-// 南非跨境电商APP - Android构建配置
+plugins {
+    id("com.android.application")
+    id("org.jetbrains.kotlin.android")
+}
+
 android {
-    namespace 'com.sacomerce.app'
-    compileSdk 34
+    namespace = "com.sacomerce.app"
+    compileSdk = 34
 
     defaultConfig {
-        applicationId "com.sacomerce.app"
-        minSdk 24
-        targetSdk 34
-        versionCode 1
-        versionName "1.0.0"
-
-        // 南非区域配置
-        resConfigs "en", "af", "zu", "xh"
+        applicationId = "com.sacomerce.app"
+        minSdk = 24
+        targetSdk = 34
+        versionCode = 100
+        versionName = "1.0.0"
         
-        // 支持的屏幕密度
-        vectorDrawables.useSupportLibrary = true
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         
-        // 南非官方语言支持
-        resourceConfigurations += ["en", "af", "zu", "xh", "nso", "st", "tn"]
-        
-        // 默认货币
-        buildConfigField "String", "DEFAULT_CURRENCY", "\"ZAR\""
-        buildConfigField "String", "COUNTRY_CODE", "\"ZA\""
-    }
-
-    signingConfigs {
-        release {
-            // 发布签名配置（需替换为实际密钥）
-            storeFile file('release-keystore.jks')
-            storePassword System.getenv('KEYSTORE_PASSWORD')
-            keyAlias System.getenv('KEY_ALIAS')
-            keyPassword System.getenv('KEY_PASSWORD')
+        vectorDrawables {
+            useSupportLibrary = true
         }
-        debug {
-            storeFile file('debug-keystore.jks')
-            storePassword 'android'
-            keyAlias 'androiddebugkey'
-            keyPassword 'android'
-        }
+        
+        // 南非区配置
+        buildConfigField("String", "COUNTRY_CODE", "\"ZA\"")
+        buildConfigField("String", "DEFAULT_CURRENCY", "\"ZAR\"")
+        buildConfigField("String", "DEFAULT_LANGUAGE", "\"en\"")
+        buildConfigField("String", "CURRENCY_SYMBOL", "\"R\"")
+        buildConfigField("String", "DECIMAL_SEPARATOR", "\".\"")
+        buildConfigField("String", "THOUSAND_SEPARATOR", "\",\"")
     }
 
     buildTypes {
-        debug {
-            applicationIdSuffix ".debug"
-            debuggable true
-            buildConfigField "String", "BASE_URL", '"https://api-staging.sacomerce.co.za"'
-        }
         release {
-            minifyEnabled true
-            shrinkResources true
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-            signingConfig signingConfigs.release
-            buildConfigField "String", "BASE_URL", '"https://api.sacomerce.co.za"'
+            isMinifyEnabled = true
+            isShrinkResources = true
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
         }
-        // 南非特定构建（本地化优化）
-        zaRelease {
-            initWith release
-            buildConfigField "boolean", "OPTIMIZED_FOR_ZA", "true"
+        debug {
+            isMinifyEnabled = false
         }
     }
 
-    // 多渠道打包（南非运营商定制）
-    flavorDimensions += "carrier"
+    flavorDimensions += "region"
     productFlavors {
-        defaultConfig {
-            dimension "carrier"
+        create("generic") {
+            dimension = "region"
+            applicationIdSuffix = ""
         }
-        // MTN定制版
-        mtn {
-            dimension "carrier"
-            applicationIdSuffix ".mtn"
-            buildConfigField "String", "CARRIER", "\"MTN\""
+        create("mtn") {
+            dimension = "region"
+            applicationIdSuffix = ".mtn"
         }
-        // Vodacom定制版
-        vodacom {
-            dimension "carrier"
-            applicationIdSuffix ".vodacom"
-            buildConfigField "String", "CARRIER", "\"VODACOM\""
+        create("vodacom") {
+            dimension = "region"
+            applicationIdSuffix = ".vodacom"
         }
-        // 通用版
-        generic {
-            dimension "carrier"
-            buildConfigField "String", "CARRIER", "\"GENERIC\""
+        create("za") {
+            dimension = "region"
+            applicationIdSuffix = ".za"
         }
     }
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_17
-        targetCompatibility JavaVersion.VERSION_17
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
 
     kotlinOptions {
-        jvmTarget = '17'
+        jvmTarget = "17"
     }
 
     buildFeatures {
-        viewBinding true
-        buildConfig true
+        viewBinding = true
+        buildConfig = true
     }
 
-    // APK输出配置
-    applicationVariants.configureEach { variant ->
-        variant.outputs.each { output ->
-            def outputFile = output.outputFileName
-            if (outputFile != null && outputFile.endsWith('.apk')) {
-                def flavor = variant.flavorName ?: "default"
-                def buildType = variant.buildType.name
-                def version = variant.versionName
-                def versionCode = variant.versionCode
-                outputFileName = "SACommerce_${flavor}_${version}_${buildType}.apk"
-            }
-        }
-    }
-
-    // 南非特定资源
-    sourceSets {
-        main {
-            res.srcDirs = [
-                'src/main/res',
-                'src/main/res-za'  // 南非特定资源
-            ]
-        }
-    }
-
-    // 代码混淆规则
     packaging {
         resources {
-            excludes += '/META-INF/{AL2.0,LGPL2.1}'
-            excludes += 'META-INF/DEPENDENCIES'
+            excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
-    }
-
-    lint {
-        abortOnError false
-        checkReleaseBuilds false
-        // 忽略南非特定警告
-        disable 'MissingTranslation', 'ExtraTranslation'
     }
 }
 
 dependencies {
-    // AndroidX
-    implementation 'androidx.core:core-ktx:1.12.0'
-    implementation 'androidx.appcompat:appcompat:1.6.1'
-    implementation 'com.google.android.material:material:1.11.0'
-    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+    // Android Core
+    implementation("androidx.core:core-ktx:1.12.0")
+    implementation("androidx.appcompat:appcompat:1.6.1")
+    implementation("com.google.android.material:material:1.11.0")
+    implementation("androidx.constraintlayout:constraintlayout:2.1.4")
+    implementation("androidx.activity:activity-ktx:1.8.2")
+    implementation("androidx.fragment:fragment-ktx:1.6.2")
     
-    // Jetpack
-    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.7.0'
-    implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.7.0'
-    implementation 'androidx.navigation:navigation-fragment-ktx:2.7.6'
-    implementation 'androidx.navigation:navigation-ui-ktx:2.7.6'
+    // RecyclerView
+    implementation("androidx.recyclerview:recyclerview:1.3.2")
     
-    // 网络
-    implementation 'com.squareup.retrofit2:retrofit:2.9.0'
-    implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
-    implementation 'com.squareup.okhttp3:okhttp:4.12.0'
-    implementation 'com.squareup.okhttp3:logging-interceptor:4.12.0'
+    // CardView
+    implementation("androidx.cardview:cardview:1.0.0")
     
-    // 图片
-    implementation 'com.github.bumptech.glide:glide:4.16.0'
+    // SwipeRefreshLayout
+    implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.1.0")
     
-    // 本地化
-    implementation 'com.google.android.gms:play-services-location:21.1.0'
+    // Lifecycle
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.7.0")
+    implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.7.0")
+    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.7.0")
+    
+    // Navigation
+    implementation("androidx.navigation:navigation-fragment-ktx:2.7.6")
+    implementation("androidx.navigation:navigation-ui-ktx:2.7.6")
+    
+    // WorkManager - 后台任务
+    implementation("androidx.work:work-runtime-ktx:2.9.0")
+    
+    // Startup - 初始化
+    implementation("androidx.startup:startup-runtime:1.1.1")
+    
+    // Security - 加密存储
+    implementation("androidx.security:security-crypto:1.1.0-alpha06")
+    
+    // WebKit
+    implementation("androidx.webkit:webkit:1.10.0")
     
     // 支付SDK
-    implementation 'com.paystack:paystack:3.2.3'  // 南非常用支付
-    implementation 'com.ozow:ozow-android:1.0.0'  // Ozow支付
-    implementation 'com.paypal.sdk:android-sdk:2.15.0'  // PayPal
+    implementation("com.paystack:paystack:3.2.3")
+    implementation("com.ozow:ozow-android:1.0.0")
+    implementation("com.paypal.sdk:android-sdk:2.15.0")
     
-    // 安全
-    implementation 'androidx.security:security-crypto:1.1.0-alpha06'
+    // 网络
+    implementation("com.squareup.okhttp3:okhttp:4.12.0")
+    implementation("com.squareup.okhttp3:logging-interceptor:4.12.0")
     
-    // 性能
-    implementation 'androidx.startup:startup-runtime:1.1.1'
-}
-
-// Gradle任务：生成南非特定APK
-task buildZaRelease(type: Exec) {
-    group = 'build'
-    description = 'Build SA-optimized release APK'
-    commandLine 'bash', '-c', './gradlew assembleZaRelease'
-}
-
-// Gradle任务：生成所有渠道APK
-task buildAllCarriers(type: Exec) {
-    group = 'build'
-    description = 'Build all carrier-specific APKs'
-    commandLine 'bash', '-c', './gradlew assembleMtnRelease assembleVodacomRelease assembleGenericRelease'
-}
-
-// Gradle任务：清理并构建
-task cleanBuild(type: Exec) {
-    group = 'build'
-    description = 'Clean and build all variants'
-    commandLine 'bash', '-c', './gradlew clean assembleDebug'
+    // JSON解析
+    implementation("com.google.code.gson:gson:2.10.1")
+    
+    // Kotlinx Serialization
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.2")
+    
+    // Coroutines
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
+    
+    // 测试
+    testImplementation("junit:junit:4.13.2")
+    androidTestImplementation("androidx.test.ext:junit:1.1.5")
+    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
 }
